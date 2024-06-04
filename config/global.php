@@ -1,5 +1,4 @@
 <?php
-    //défnition du controlleur et de l'action par default
-    define("CONTROLLER_DEFAULT", "Film");
+    define("CONTROLLER_DEFAULT", "Task");
     define("ACTION_DEFAULT", "index");
 ?>

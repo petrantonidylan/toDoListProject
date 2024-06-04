@@ -27,7 +27,7 @@ class UserTask
         $this -> user_login = $login;
     }
 
-    public function setUtilisateurPass($password)
+    public function setUserPass($password)
     {
         $this -> user_password = password_hash($password, PASSWORD_DEFAULT);
     }
@@ -51,7 +51,7 @@ class UserTask
     public function insert(){
         try{
             $query = $this->connection->prepare("INSERT INTO " . $this -> table . " (user_login, user_password) VALUES (:login, :password)");
-            $query->bindParam(':login', $this->user_login);
+            $query->bindParam(':login', $this -> user_login);
             $query->bindParam(':password', $this -> user_password);
             $query->execute();
             $this -> connection = null;

@@ -73,6 +73,15 @@ class Task
         $query->bindParam(':login', $p_user_login);
         $query -> execute();
         $result = $query -> fetchAll();
+        return $result;
+    }
+
+    public function getById($id)
+    {
+        $query = $this -> connection -> prepare("SELECT * FROM " . $this -> table . " WHERE task_id = :id");
+        $query -> bindParam(':id', $id);
+        $query -> execute();
+        $result = $query -> fetchObject();
         $this -> connection = null;
         return $result;
     }

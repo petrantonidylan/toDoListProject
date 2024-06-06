@@ -49,4 +49,23 @@ class Step
         return $result;
     }
 
+    public function deleteByTask()
+    {
+        $query = $this -> connection -> prepare("DELETE FROM ".$this->table." WHERE task_id = :id");
+        $query -> execute(array("id"=>$this -> task_id));
+        return "";
+    }
+
+    public function setStepAsDone(){
+        $query = $this -> connection -> prepare("UPDATE " . $this->table . " SET step_is_done = 1 WHERE step_id = :id");
+        $query -> execute(array("id"=>$this -> step_id));
+        return "";
+    }
+
+    public function setStepAsToDo(){
+        $query = $this -> connection -> prepare("UPDATE " . $this->table . " SET step_is_done = 0 WHERE step_id = :id");
+        $query -> execute(array("id"=>$this -> step_id));
+        return "";
+    }
+
 }

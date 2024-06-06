@@ -69,7 +69,7 @@ class Task
 
     public function getAllByUser($p_user_login)
     {
-        $query = $this -> connection -> prepare("SELECT * FROM " . $this -> table . ", UserTask WHERE Task.user_id = UserTask.user_id AND user_login = :login");
+        $query = $this -> connection -> prepare("SELECT * FROM " . $this -> table . ", UserTask WHERE Task.user_id = UserTask.user_id AND user_login = :login ORDER BY task_is_done");
         $query->bindParam(':login', $p_user_login);
         $query -> execute();
         $result = $query -> fetchAll();
@@ -84,5 +84,24 @@ class Task
         $result = $query -> fetchObject();
         $this -> connection = null;
         return $result;
+    }
+
+    public function delete()
+    {
+        $query = $this -> connection -> prepare("DELETE FROM " . $this->table . " WHERE task_id = :id");
+        $query -> execute(array("id"=>$this -> task_id));
+        return "";
+    }
+
+    public function setTaskAsDone(){
+        $query = $this -> connection -> prepare("UPDATE " . $this->table . " SET task_is_done = 1 WHERE task_id = :id");
+        $query -> execute(array("id"=>$this -> task_id));
+        return "";
+    }
+
+    public function setTaskAsToDo(){
+        $query = $this -> connection -> prepare("UPDATE " . $this->table . " SET task_is_done = 0 WHERE task_id = :id");
+        $query -> execute(array("id"=>$this -> task_id));
+        return "";
     }
 }

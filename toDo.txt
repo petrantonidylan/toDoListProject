@@ -1,4 +1,5 @@
 toDo:
 
 - Imposer un mot de passe fort à l'inscription.
-- Faire en sorte qu'un utilsiateur ne puisse pas voir le détail des tâches, des autres utilisateurs, en modifiant l'id en URL
+- Faire en sorte qu'un utilsiateur ne puisse pas voir le détail/supprimer des tâches, des autres utilisateurs, en modifiant l'id en URL
+- Ajouter photo de profil utilisateur

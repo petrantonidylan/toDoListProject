@@ -25,6 +25,26 @@ class TaskController
                 $this -> index();
             break;
 
+            case "delete":
+                $this -> delete();
+            break;
+
+            case "setTaskAsDone":
+                $this -> setTaskAsDone();
+            break;
+
+            case "setTaskAsToDo":
+                $this -> setTaskAsToDo();
+            break;
+
+            case "setStepAsDone":
+                $this -> setStepAsDone();
+            break;
+
+            case "setStepAsToDo":
+                $this -> setStepAsToDo();
+            break;
+
             default:
                 $this -> index();
             break;
@@ -52,6 +72,49 @@ class TaskController
         }else{
             $this -> view("task", array("tasks" => $Tasks));
         }
+    }
+
+    public function delete()
+    {
+        if(isset($_GET["id"]))
+        {
+            $Step = new Step($this -> connection);
+            $Step -> setTaskId($_GET["id"]);
+            $save = $Step -> deleteByTask();
+
+            $Task = new Task($this -> connection);
+            $Task -> setTaskId($_GET["id"]);
+            $save = $Task -> delete();
+            header('Location: index.php');
+        }
+    }
+
+    public function setTaskAsDone(){
+        $Task = new Task($this -> connection);
+        $Task -> setTaskId($_GET["id"]);
+        $save = $Task -> setTaskAsDone();
+        header('Location: index.php?controller=Task&action=index&id='.$_GET["id"]);
+    }
+
+    public function setTaskAsToDo(){
+        $Task = new Task($this -> connection);
+        $Task -> setTaskId($_GET["id"]);
+        $save = $Task -> setTaskAsToDo();
+        header('Location: index.php?controller=Task&action=index&id='.$_GET["id"]);
+    }
+
+    public function setStepAsDone(){
+        $Step = new Step($this -> connection);
+        $Step -> setStepId($_GET["step_id"]);
+        $save = $Step -> setStepAsDone();
+        header('Location: index.php?controller=Task&action=index&id='.$_GET["id"]);
+    }
+
+    public function setStepAsToDo(){
+        $Step = new Step($this -> connection);
+        $Step -> setStepId($_GET["step_id"]);
+        $save = $Step -> setStepAsToDo();
+        header('Location: index.php?controller=Task&action=index&id='.$_GET["id"]);
     }
 
     public function view($name, $data)

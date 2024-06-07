@@ -42,9 +42,11 @@ class UserTask
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($p_user_password, $user['user_password'])) {
-            return true;
+            // return true;
+            return array("response" => true, "user_id" => $user['user_id']);
         } else {
-            return false;
+            // return false;
+            return array("response" => false);
         }
     }
 

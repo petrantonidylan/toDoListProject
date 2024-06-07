@@ -104,4 +104,29 @@ class Task
         $query -> execute(array("id"=>$this -> task_id));
         return "";
     }
+
+    public function insert()
+    {
+        try{
+            $query = $this -> connection -> prepare("INSERT INTO " . $this -> table . "(task_title, task_created_at, task_deadline, task_comment, task_is_done, user_id) VALUES (:task_title, :task_created_at, :task_deadline, :task_comment, 0, :user_id)");
+            $currentDate = date('Y-m-d');
+            $query -> bindParam(':task_title', $this -> task_title);
+            $query -> bindParam(':task_created_at', $currentDate);
+            $query -> bindParam(':task_deadline', $this -> task_deadline);
+            $query -> bindParam(':task_comment', $this -> task_comment);
+            $query -> bindParam(':user_id', $this -> user_id);
+            $query -> execute();
+            return true;
+        }catch(Exception $e)
+        {
+            return false;
+        }
+    }
+
+    public function lastTaskId(){
+        $query = $this -> connection -> prepare("SELECT * FROM Task WHERE task_id = (SELECT MAX(task_id) FROM Task);");
+        $query -> execute();
+        $result = $query -> fetchObject();
+        return $result;
+    }
 }

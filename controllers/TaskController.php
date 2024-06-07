@@ -45,6 +45,18 @@ class TaskController
                 $this -> setStepAsToDo();
             break;
 
+            case "insertStep":
+                $this -> insertStep();
+            break;
+
+            case "deleteStep":
+                $this -> deleteStep();
+            break;
+
+            case "insert":
+                $this -> insert();
+            break;
+
             default:
                 $this -> index();
             break;
@@ -115,6 +127,55 @@ class TaskController
         $Step -> setStepId($_GET["step_id"]);
         $save = $Step -> setStepAsToDo();
         header('Location: index.php?controller=Task&action=index&id='.$_GET["id"]);
+    }
+
+    public function insertStep(){
+        if(isset($_POST['newStepTitle']) && $_POST['newStepTitle'][0] !== " "){
+            $Step = new Step($this -> connection);
+            $Step -> setTaskId($_GET["id"]);
+            $Step -> setStepTitle($_POST['newStepTitle']);
+            if($Step -> insert()){
+                header('Location: index.php?controller=Task&action=index&id='.$_GET["id"]);
+            }else{
+                header('Location: index.php?controller=Task&action=index&id='.$_GET["id"]);
+            }
+        }else{
+            header('Location: index.php?controller=Task&action=index&id='.$_GET["id"]);
+        }
+    }
+
+    public function deleteStep()
+    {
+        if(isset($_GET["id"]) && isset($_GET["step_id"]))
+        {
+            $Step = new Step($this -> connection);
+            $Step -> setStepId($_GET["step_id"]);
+            $save = $Step -> delete();
+            header('Location: index.php?controller=Task&action=index&id='.$_GET["id"]);
+        }
+    }
+
+    public function insert(){
+        if(isset($_POST['title']) && $_POST['title'][0] !== " "){
+            $Task = new Task($this -> connection);
+            $Task -> setTaskTitle($_POST['title']);
+            $Task -> setTaskComment($_POST['comment']);
+            $datetime = $_POST['date'] . ' ' . $_POST['time'] . ":00";
+            $Task -> setTaskDeadline($datetime);
+            $Task -> setUserId($_POST['user_id']);
+            $insert = $Task -> insert();
+
+            $lastTask = $Task -> lastTaskId();
+            $id = $lastTask -> task_id;
+
+            if($insert){
+                header('Location: index.php?controller=Task&action=index&id=' . $id);
+            }else{
+                header('Location: index.php?controller=Task&action=index');
+            }
+        }else{
+            header('Location: index.php?controller=Task&action=index');
+        }
     }
 
     public function view($name, $data)

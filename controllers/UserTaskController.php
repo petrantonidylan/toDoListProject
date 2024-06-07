@@ -42,9 +42,11 @@ class UserTaskController
     {
         if(isset($_POST["login"]) && isset($_POST["pass"])){
             $User = new UserTask($this->connection);
-            if($User->authenticate($_POST["login"], $_POST["pass"]))
+            $tab = $User->authenticate($_POST["login"], $_POST["pass"]);
+            if($tab['response'])
             {
                 $_SESSION['user_login'] = $_POST["login"];
+                $_SESSION['user_id'] = $tab['user_id'];
                 header('Location: index.php?controller=Task');
                 exit;
             }else

@@ -3,3 +3,4 @@ toDo:
 - Imposer un mot de passe fort à l'inscription.
 - Faire en sorte qu'un utilsiateur ne puisse pas voir le détail/supprimer des tâches, des autres utilisateurs, en modifiant l'id en URL
 - Ajouter photo de profil utilisateur
+- faire en sorte, pour la création d'une tache, que la date de deadline soit ultérieur à la date du jour

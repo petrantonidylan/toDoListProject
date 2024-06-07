@@ -68,4 +68,24 @@ class Step
         return "";
     }
 
+    public function insert()
+    {
+        try{
+            $query = $this -> connection -> prepare("INSERT INTO " . $this -> table . "(step_title, step_is_done, task_id) VALUES (:step_title, 0, :task_id)");
+            $query -> bindParam(':step_title', $this -> step_title);
+            $query -> bindParam(':task_id', $this -> task_id);
+            $query -> execute();
+            return true;
+        }catch(Exception $e)
+        {
+            return false;
+        }
+    }
+
+    public function delete()
+    {
+        $query = $this -> connection -> prepare("DELETE FROM " . $this->table . " WHERE step_id = :id");
+        $query -> execute(array("id"=>$this -> step_id));
+        return "";
+    }
 }

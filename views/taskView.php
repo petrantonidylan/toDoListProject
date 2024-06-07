@@ -11,6 +11,31 @@
 </head>
 
 <body>
+    <div class="insert_container" id="insert_container">
+        <div class="container mt-5 d-flex align-items-center justify-content-center full-height">
+        <div class="card p-4 shadow" style="width:40%;margin-top:50px;">
+            <h3 class="card-title">Add a new task</h3>
+            <form method="post" action="index.php?controller=Task&action=insert">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Title" required>
+                    <?php echo "<input type='hidden' name='user_id' value='" . $_SESSION['user_id'] . "'>"; ?>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control fixed-size-textarea" id="comment" name="comment" placeholder="Comment" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Deadline datetime :</label>
+                    <input type="date" class="form-control" id="date" name="date" required>
+                </div>
+                <div class="mb-3">
+                    <input type="time" class="form-control" id="time" name="time" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <button class="theButton" onclick="hideAddForm()">Close this windows</button>
+        </div>
+    </div>
+    </div>
     <div class="container-fluid">
         <div class="row">
             <div class="col-3 sidebar bg-info-subtle">
@@ -18,7 +43,9 @@
                 <img src="./files/logoToDoBlack2.png" alt="Logo" class="img-fluid" style="max-width: 120px;">
             </div>
             <div class="text-center mb-4">
-                <a href="index.php?controller=UserTask&action=logout" class="btn btn-primary"><i class="fa-regular fa-user"></i> <?php echo $_SESSION['user_login'] . " "; ?><i class="fa-solid fa-power-off"></i></a>
+                <a href="index.php?controller=UserTask&action=logout" class="btn btn-primary"><i class="fa-regular fa-user"></i> <?php echo $_SESSION['user_login'] . " "; ?><i class="fa-solid fa-power-off"></i></a><br><br>
+                <h4>My tasks:</h4>
+                <button class='btn btn-success' onclick="displayAddForm()">Add <i class="fa-solid fa-plus"></i></button>
             </div>    
                 <ul class="list-group">
                 <?php
@@ -34,8 +61,12 @@
                         {
                             $title = "<del>" . $task["task_title"] . "</del>";
                         }
-                        if($_GET['id'] == $task["task_id"]){
-                            $class = "bg-primary-subtle";
+                        if(isset($_GET['id'])){
+                            if($_GET['id'] == $task["task_id"]){
+                                $class = "bg-primary-subtle";
+                            }else{
+                                $class = "";
+                            }
                         }else{
                             $class = "";
                         }
@@ -64,13 +95,22 @@
                         echo "<p>Deadline : " . $dateTime2->format('d/m/Y') . " at " . $dateTime2->format('H:i') . "</p>";
                         echo "<p>Comment : " . $data["currentTask"] -> task_comment ."</p>";
                         echo "<hr>";
+                        echo "Step(s):<br>";
+                        echo "
+                        <form method='post' action ='index.php?controller=Task&action=insertStep&id=" . $_GET['id'] . "'>
+                            <input type='text' name='newStepTitle' placeholder='New step' required>
+                            <input type='submit' value='Add'>
+                        </form><br>";
                     }
                 }else{
                     echo "<h2>Please, select a task.</h2>";
-                }
+                } ?>
+
+
+
+                <?php
                 if(isset($data["steps"]))
                 {
-                    echo "Step(s):<br>";
                     $n = 1;
                     foreach($data["steps"] as $step){
                         if(!$step['step_is_done']){
@@ -78,7 +118,7 @@
                         }else{
                             $link2="<a href='index.php?controller=Task&action=setStepAsToDo&step_id=" . $step['step_id'] . "&id=" . $data["currentTask"] -> task_id . "'><i class='fa-regular fa-square-check'></i></a>";
                         }
-                        echo "&nbsp&nbsp". $link2 ." Step ". $n . " : " .$step['step_title'] ."<br>";
+                        echo "&nbsp&nbsp". $link2 ." <a href='index.php?controller=Task&action=deleteStep&id=" . $step['task_id'] . "&step_id=" . $step['step_id'] ."' class='text-danger'><i class='fa-solid fa-trash-can'></i></a> Step ". $n . " : " .$step['step_title'] . "</li><br>";
                         $n ++;
                     }
                     $n = 1;
@@ -87,6 +127,8 @@
             </div>
         </div>
     </div>
+
+
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
@@ -97,6 +139,16 @@
             } else {
                 return false;
             }
+        }
+
+        function hideAddForm() {
+            const div = document.getElementById('insert_container');
+            div.style.display = 'none';
+        }
+
+        function displayAddForm() {
+            const div = document.getElementById('insert_container');
+            div.style.display = 'block';
         }
     </script>
 </body>

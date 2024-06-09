@@ -68,24 +68,28 @@ class UserTaskController
     public function signup()
     {
         if(isset($_POST["login"]) && isset($_POST["pass_1"]) && isset($_POST["pass_2"])){
-           if($_POST["pass_1"] == $_POST["pass_2"])
-           {
-                $User = new UserTask($this->connection);
-                $User -> setUserLogin($_POST["login"]);
-                $User -> setUserPass($_POST["pass_1"]);
-
-                if($User -> insert())
+            if(preg_match('/[A-Z]/', $_POST["pass_1"]) && preg_match('/[a-z]/', $_POST["pass_1"]) && preg_match('/[0-9]/', $_POST["pass_1"]) && preg_match('/[\W_]/', $_POST["pass_1"]) && strlen($_POST["pass_1"]) >= 8){
+                if($_POST["pass_1"] == $_POST["pass_2"])
                 {
-                    $_SESSION['user_login'] = $_POST["login"];
-                    header('Location: index.php?controller=Task');
-                    exit;
-                }else
-                {
-                    $this -> view("signup", array("error" => "This login already exists."));
-                }
-           }else{
-                $this -> view("signup", array("error" => "The password and the confirmation must be the same."));
-           }
+                    $User = new UserTask($this->connection);
+                    $User -> setUserLogin($_POST["login"]);
+                    $User -> setUserPass($_POST["pass_1"]);
+    
+                    if($User -> insert())
+                    {
+                        $_SESSION['user_login'] = $_POST["login"];
+                        header('Location: index.php?controller=Task');
+                        exit;
+                    }else
+                    {
+                        $this -> view("signup", array("error" => "This login already exists."));
+                    }
+                }else{
+                    $this -> view("signup", array("error" => "The password and the confirmation must be the same."));
+                }                
+            }else{
+                $this -> view("signup", array("error" => "The password must have, at least, one lowercase letter, one uppercase letter, one number, and count at least 8 caracters."));
+            }
         }else{
             $this -> view("signup", array());
         }

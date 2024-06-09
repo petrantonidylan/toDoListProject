@@ -157,21 +157,28 @@ class TaskController
 
     public function insert(){
         if(isset($_POST['title']) && $_POST['title'][0] !== " "){
-            $Task = new Task($this -> connection);
-            $Task -> setTaskTitle($_POST['title']);
-            $Task -> setTaskComment($_POST['comment']);
             $datetime = $_POST['date'] . ' ' . $_POST['time'] . ":00";
-            $Task -> setTaskDeadline($datetime);
-            $Task -> setUserId($_POST['user_id']);
-            $insert = $Task -> insert();
-
-            $lastTask = $Task -> lastTaskId();
-            $id = $lastTask -> task_id;
-
-            if($insert){
-                header('Location: index.php?controller=Task&action=index&id=' . $id);
+            $currentDatetime = new DateTime();
+            $deadline = new DateTime($datetime);
+            if($deadline > $currentDatetime)
+            {
+                $Task = new Task($this -> connection);
+                $Task -> setTaskTitle($_POST['title']);
+                $Task -> setTaskComment($_POST['comment']);
+                $Task -> setTaskDeadline($datetime);
+                $Task -> setUserId($_POST['user_id']);
+                $insert = $Task -> insert();
+    
+                $lastTask = $Task -> lastTaskId();
+                $id = $lastTask -> task_id;
+    
+                if($insert){
+                    header('Location: index.php?controller=Task&action=index&id=' . $id);
+                }else{
+                    header('Location: index.php?controller=Task&action=index');
+                }
             }else{
-                header('Location: index.php?controller=Task&action=index');
+                header('Location: index.php?controller=Task&action=index&error=001');
             }
         }else{
             header('Location: index.php?controller=Task&action=index');

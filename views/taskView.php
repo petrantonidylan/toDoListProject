@@ -1,3 +1,4 @@
+<?php require_once('errorHandling.php') ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -123,6 +124,11 @@
                     }
                     $n = 1;
                 }
+                ?>
+                <?php 
+                    if(isset($_GET["error"])){
+                        echo "<div class='alert alert-danger bg-danger-subtle text-center' style='margin-top:10px'>" . errorHandling($_GET["error"]) . "</div>";
+                    }
                 ?>
             </div>
         </div>
